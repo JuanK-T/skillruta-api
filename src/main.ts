@@ -30,6 +30,9 @@ async function bootstrap() {
 
   const port = cfg.get<number>('app.port')!;
   await app.listen(port);
+
+  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log(`📖 API Documentation: http://localhost:${port}/docs`);
 }
 
 bootstrap().catch((error) => {
