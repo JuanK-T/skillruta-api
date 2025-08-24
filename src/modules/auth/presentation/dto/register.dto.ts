@@ -6,7 +6,7 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
-import { Role } from '../../../../common/types'; // Importa el enum Role
+import { Role } from '../../../../common/types';
 
 export class RegisterDto {
   @ApiProperty({ example: 'admin@skillruta.dev' })

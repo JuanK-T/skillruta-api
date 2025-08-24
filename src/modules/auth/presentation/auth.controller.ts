@@ -1,4 +1,3 @@
-// src/modules/auth/presentation/auth.controller.ts
 import {
   Body,
   Controller,
