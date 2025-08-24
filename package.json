@@ -13,10 +13,13 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset --force",
-    "seed": "prisma db seed",
+    "seed": "ts-node prisma/seed.ts",
     "commit": "cz",
     "prepare": "husky install",
     "check": "npm run format && npm run lint"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

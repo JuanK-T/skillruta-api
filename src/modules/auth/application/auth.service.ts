@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UserRepositoryPort } from '../../users/user.repository.port';
+import { USER_REPOSITORY } from '../../users/user.tokens';
 import { Role } from '../../../common/types';
 
 type BaseUser = { id: string; email: string; role: Role };
@@ -10,7 +11,7 @@ type BaseUser = { id: string; email: string; role: Role };
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly users: UserRepositoryPort,
+    @Inject(USER_REPOSITORY) private readonly users: UserRepositoryPort,
     private readonly jwt: JwtService,
     private readonly cfg: ConfigService
   ) {}
