@@ -56,3 +56,11 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 /generated/prisma
+
+#
+/pruebas
+
+# cookies / sesiones locales
+cookies.txt
+*.cookies.txt
+test/cookies.txt
