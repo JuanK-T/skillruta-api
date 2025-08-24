@@ -47,4 +47,21 @@ export class PrismaUserRepository implements UserRepositoryPort {
         }
       : null;
   }
+
+  async setRefreshTokenHash(
+    userId: string,
+    hash: string | null
+  ): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { refreshTokenHash: hash },
+    });
+  }
+
+  async incrementTokenVersion(userId: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { tokenVersion: { increment: 1 } },
+    });
+  }
 }

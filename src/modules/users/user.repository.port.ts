@@ -20,4 +20,7 @@ export interface UserRepositoryPort {
 
   // Buscar usuario por ID (para obtener perfil)
   findById(id: string): Promise<UserDto | null>;
+
+  setRefreshTokenHash(userId: string, hash: string | null): Promise<void>;
+  incrementTokenVersion(userId: string): Promise<void>;
 }
