@@ -7,6 +7,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import {
   ApiCookieAuth,
@@ -21,7 +22,7 @@ import {
   ApiBadRequestResponse,
   ApiHeader,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import type { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from '../application/auth.service';
@@ -42,6 +43,10 @@ import {
   MeResponse,
 } from './types/responses.types';
 import { AuthCookieService } from '../infrastructure/auth-cookie.service';
+
+interface AuthenticatedRequest extends Request {
+  user?: UserPayload;
+}
 
 @ApiTags('auth')
 @Controller('auth')
@@ -117,6 +122,7 @@ export class AuthController {
   })
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   async refresh(
     @User('id') id: string,
     @User('email') email: string,
@@ -136,11 +142,14 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout (revoca refresh y borra cookies)' })
   @ApiOkResponse({ description: 'Sesión cerrada', type: LoginResponse })
   @Post('logout')
-  async logout(
-    @User('id') userId: string | undefined,
-    @Res({ passthrough: true }) res: Response
-  ) {
-    if (userId) await this.auth.revokeRefreshTokens(userId);
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const userId = (req as AuthenticatedRequest).user?.id;
+
+    if (userId) {
+      await this.auth.revokeRefreshTokens(userId);
+    }
+
     this.cookies.clear(res);
     return { message: 'logged out' };
   }
