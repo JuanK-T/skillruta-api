@@ -66,10 +66,13 @@ SkillRuta API es una aplicación backend desarrollada con NestJS que proporciona
 5. **Configurar la base de datos**
 
    ```bash
-   # Ejecutar migraciones
+   # Generar el cliente de Prisma
+   npm run prisma:generate
+
+   # Ejecutar migraciones para crear las tablas
    npm run prisma:migrate
 
-   # Opcional: Ejecutar seeder
+   # Opcional: Ejecutar seeder con datos de prueba
    npm run seed
    ```
 
@@ -94,6 +97,10 @@ http://localhost:3000/docs
 **Nota importante**: La autenticación en Swagger se maneja mediante cookies HTTP-only. Después de iniciar sesión mediante el endpoint correspondiente, el token JWT se almacenará automáticamente en una cookie y se enviará con las solicitudes subsiguientes.
 
 ## 🗃️ Base de Datos
+
+### Configuración de Prisma
+
+El proyecto utiliza Prisma ORM para la gestión de la base de datos. El esquema se define en prisma/schema.prisma e incluye modelos para usuarios, cursos, capítulos, progreso e insignias.
 
 ### Estructura de la Base de Datos
 
@@ -194,6 +201,7 @@ npm test -- --coverage
 | `npm run db:reset`        | Reinicia la base de datos                     |
 | `npm run seed`            | Ejecuta seeder de base de datos               |
 | `npm run commit`          | Inicia Commitizen para commits convencionales |
+| `npx prisma studio`       | Inicia Commitizen para commits convencionales |
 
 ## 🌐 Estructura del Proyecto
 
