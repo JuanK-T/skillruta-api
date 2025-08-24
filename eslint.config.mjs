@@ -7,11 +7,11 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   {
     ignores: [
-      'eslint.config.mjs', 
+      'eslint.config.mjs',
       'commitlint.config.js',
-      'dist/**',          // ← Agregar estas ignoraciones
+      'dist/**', // ← Agregar estas ignoraciones
       'node_modules/**',
-      'coverage/**'
+      'coverage/**',
     ],
   },
   eslint.configs.recommended,
@@ -36,7 +36,7 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       '@typescript-eslint/no-unsafe-call': 'off',
-      'prettier/prettier': 'error'
+      'prettier/prettier': 'error',
     },
-  },
+  }
 );
