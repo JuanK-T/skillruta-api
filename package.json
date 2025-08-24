@@ -1,8 +1,8 @@
 {
   "name": "skillruta-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "API para cursos, capítulos, progreso e insignias",
+  "author": "Juan Camilo Tique",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

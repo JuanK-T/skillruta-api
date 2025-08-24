@@ -1,98 +1,236 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# SkillRuta API - Documentación del Proyecto
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📋 Descripción del Proyecto
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+SkillRuta API es una aplicación backend desarrollada con NestJS que proporciona servicios para la gestión de cursos, capítulos, progreso de usuarios e insignias. Esta API está diseñada para ser escalable, mantenible y seguir las mejores prácticas de desarrollo.
 
-## Description
+## 🛠️ Tecnologías Utilizadas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Backend
 
-## Project setup
+- **NestJS** - Framework principal de Node.js
+- **TypeScript** - Lenguaje de programación
+- **Prisma** - ORM para la base de datos
+- **MySQL** - Base de datos relacional
+- **JWT** - Autenticación por tokens
+- **Passport** - Estrategias de autenticación
+- **Class Validator** - Validación de DTOs
+- **Swagger/OpenAPI** - Documentación de la API
 
-```bash
-$ npm install
+### Desarrollo y Calidad de Código
+
+- **ESLint** - Linter para análisis estático
+- **Prettier** - Formateo de código
+- **Husky** - Git hooks
+- **Commitizen** - Commits convencionales
+- **Commitlint** - Validación de mensajes de commit
+- **Jest** - Framework de testing
+
+## 🚀 Configuración y Ejecución
+
+### Prerrequisitos
+
+- Node.js (v18 o superior)
+- Docker y Docker Compose
+- npm o yarn
+
+### Instalación
+
+1. **Clonar el repositorio**
+
+   ```bash
+   git clone <url-del-repositorio>
+   cd skillruta-api
+   ```
+
+2. **Instalar dependencias**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+
+   ```bash
+   # Copiar y ajustar el archivo .env según sea necesario
+   cp .env.example .env
+   ```
+
+4. **Iniciar servicios con Docker**
+
+   ```bash
+   # Iniciar MySQL y Adminer
+   docker-compose up -d
+   ```
+
+5. **Configurar la base de datos**
+
+   ```bash
+   # Ejecutar migraciones
+   npm run prisma:migrate
+
+   # Opcional: Ejecutar seeder
+   npm run seed
+   ```
+
+6. **Ejecutar la aplicación**
+
+   ```bash
+   # Modo desarrollo
+   npm run start:dev
+
+   # Modo producción
+   npm run start
+   ```
+
+## 📖 Acceso a Swagger/OpenAPI
+
+Una vez que la aplicación esté ejecutándose, puedes acceder a la documentación interactiva de la API en:
+
+```
+http://localhost:3000/docs
 ```
 
-## Compile and run the project
+**Nota importante**: La autenticación en Swagger se maneja mediante cookies HTTP-only. Después de iniciar sesión mediante el endpoint correspondiente, el token JWT se almacenará automáticamente en una cookie y se enviará con las solicitudes subsiguientes.
 
-```bash
-# development
-$ npm run start
+## 🗃️ Base de Datos
 
-# watch mode
-$ npm run start:dev
+### Estructura de la Base de Datos
 
-# production mode
-$ npm run start:prod
+La aplicación utiliza MySQL 8.0 con las siguientes configuraciones:
+
+- Puerto mapeado: 3307 (externo) → 3306 (contenedor)
+- Nombre de la base de datos: `skillruta`
+- Usuario: `skilluser`
+- Contraseña: `skillpass`
+
+### Acceso a Adminer
+
+Puedes gestionar la base de datos visualmente mediante Adminer en:
+
+```
+http://localhost:8080
 ```
 
-## Run tests
+- Sistema: MySQL
+- Servidor: `mysql`
+- Usuario: `skilluser` (o `root` para acceso completo)
+- Contraseña: `skillpass` (o `rootpass` para root)
+- Base de datos: `skillruta`
 
-```bash
-# unit tests
-$ npm run test
+## 🔐 Autenticación y Autorización
 
-# e2e tests
-$ npm run test:e2e
+La API utiliza autenticación JWT con las siguientes características:
 
-# test coverage
-$ npm run test:cov
+- Tokens almacenados en cookies HTTP-only para mayor seguridad
+- Estrategia Passport-JWT para la validación de tokens
+- Configuración flexible mediante variables de entorno
+
+## 📝 Conventional Commits
+
+Este proyecto sigue el estándar de Conventional Commits para mantener un historial de cambios claro y consistente.
+
+### Formatos de commit:
+
+```
+<tipo>[ámbito opcional]: <descripción>
+
+[cuerpo opcional]
+
+[pie opcional]
 ```
 
-## Deployment
+### Tipos permitidos:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- `feat` - Nueva funcionalidad
+- `fix` - Corrección de bugs
+- `docs` - Cambios en documentación
+- `style` - Cambios de formato (espacios, comas, etc.)
+- `refactor` - Refactorización de código
+- `test` - Adición o modificación de tests
+- `chore` - Tareas de mantenimiento
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Ejemplos:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Usando commitizen (recomendado)
+npm run commit
+
+# Manualmente (siguiendo el formato)
+git commit -m "feat(users): add user registration endpoint"
+git commit -m "fix(auth): resolve token expiration issue"
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Validación:
 
-## Resources
+El proyecto utiliza Commitlint para validar que los mensajes de commit sigan el formato convencional. Los commits que no cumplan con el formato serán rechazados.
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🧪 Testing
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Ejecutar tests
 
-## Support
+```bash
+# Ejecutar todos los tests
+npm test
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Ejecutar tests en modo watch
+npm test -- --watch
 
-## Stay in touch
+# Generar reporte de cobertura
+npm test -- --coverage
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🔧 Scripts Disponibles
 
-## License
+| Comando                   | Descripción                                   |
+| ------------------------- | --------------------------------------------- |
+| `npm start`               | Ejecuta la aplicación en producción           |
+| `npm run start:dev`       | Ejecuta en modo desarrollo con hot-reload     |
+| `npm run lint`            | Ejecuta ESLint para análisis de código        |
+| `npm run format`          | Formatea el código con Prettier               |
+| `npm run check`           | Ejecuta format y lint                         |
+| `npm run prisma:generate` | Genera cliente Prisma                         |
+| `npm run prisma:migrate`  | Ejecuta migraciones de base de datos          |
+| `npm run db:reset`        | Reinicia la base de datos                     |
+| `npm run seed`            | Ejecuta seeder de base de datos               |
+| `npm run commit`          | Inicia Commitizen para commits convencionales |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 🌐 Estructura del Proyecto
+
+```
+src/
+├── modules/          # Módulos de la aplicación
+│   ├── auth/        # Autenticación y autorización
+│   ├── users/       # Gestión de usuarios
+│   ├── courses/     # Gestión de cursos
+│   └── ...          # Otros módulos
+├── common/          # Utilidades y recursos compartidos
+├── config/          # Configuraciones de la aplicación
+└── main.ts          # Punto de entrada de la aplicación
+```
+
+## ⚙️ Variables de Entorno
+
+Las principales variables de entorno utilizadas son:
+
+| Variable         | Descripción             | Valor por Defecto |
+| ---------------- | ----------------------- | ----------------- |
+| `APP_PORT`       | Puerto de la aplicación | 3000              |
+| `NODE_ENV`       | Entorno de ejecución    | development       |
+| `JWT_SECRET`     | Secreto para firmar JWT | default-secret    |
+| `JWT_EXPIRES_IN` | Expiración de JWT       | 1d                |
+| `DATABASE_URL`   | URL de conexión a BD    | -                 |
+| `COOKIE_SECURE`  | Cookies seguras (HTTPS) | false             |
+
+## 🤝 Contribución
+
+1. Asegúrate de seguir el estándar de Conventional Commits
+2. Ejecuta `npm run check` antes de commitear para verificar formato y linting
+3. Mantén las pruebas actualizadas
+4. Actualiza la documentación cuando sea necesario
+
+## 📄 Licencia
+
+Este proyecto es de uso privado y no tiene una licencia pública específica.
+
+---
