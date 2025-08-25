@@ -28,7 +28,7 @@ import {
   ApiUnauthorizedResponse,
   ApiConflictResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { CreateCourseUseCase } from './application/usecases/courses/create-course.usecase';
 import { UpdateCourseUseCase } from './application/usecases/courses/update-course.usecase';
 import { UnpublishCourseUseCase } from './application/usecases/courses/unpublish-course.usecase';
@@ -42,7 +42,7 @@ import { CreateCourseDto } from './application/dto/create-course.dto';
 import { UpdateCourseDto } from './application/dto/update-course.dto';
 import { AddChapterDto } from './application/dto/add-chapter.dto';
 import { ReorderChaptersDto } from './application/dto/reorder-chapters.dto';
-import { User as UserDec } from '../../common/decorators/user.decorator';
+import { User as UserDec } from '@/common/decorators/user.decorator';
 import { PublishCourseUseCase } from './application/usecases/courses/publish-course.usecase';
 import { DeleteCourseUseCase } from './application/usecases/courses/delete-course.usecase';
 import { CourseResponse } from './application/dto/course-response.dto';
