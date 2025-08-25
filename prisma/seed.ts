@@ -14,17 +14,19 @@ async function main() {
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
+  const name = email.split('@')[0]; // 👈 antes del @
 
   await prisma.user.create({
     data: {
       email,
+      name,
       passwordHash,
       role: 'ADMIN',
       refreshTokenHash: null,
     },
   });
 
-  console.log('✅ Admin creado:', email, '(pass: Admin123!)');
+  console.log(`✅ Admin creado: ${email} (pass: ${password}, name: ${name})`);
 }
 
 main()

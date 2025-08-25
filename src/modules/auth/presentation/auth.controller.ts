@@ -100,6 +100,7 @@ export class AuthController {
       id: u.id,
       email: u.email,
       role: u.role,
+      tv: u.tokenVersion,
     });
     this.cookies.setAccess(res, access);
     this.cookies.setRefresh(res, refresh);

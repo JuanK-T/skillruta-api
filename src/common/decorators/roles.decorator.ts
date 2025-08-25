@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Role } from '../../common/types';
+import { Role } from '../types';
 
 // Clave para almacenar metadatos de roles en los controladores
 export const ROLES_KEY = 'roles';

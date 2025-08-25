@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role, UserPayload } from '../types';
@@ -33,17 +39,21 @@ export class RolesGuard implements CanActivate {
 
     // Si no hay roles requeridos, permitir acceso
     if (!requiredRoles || requiredRoles.length === 0) {
-      return true;
+      return true; // no hay restricción de roles
     }
 
     const request: AuthenticatedRequest = ctx.switchToHttp().getRequest();
 
     // Si no hay usuario autenticado, denegar acceso
     if (!request.user) {
-      return false;
+      throw new UnauthorizedException('Usuario no autenticado');
     }
 
-    // Verificar si el usuario tiene al menos uno de los roles requeridos
-    return requiredRoles.includes(request.user.role);
+    const hasRole = requiredRoles.includes(request.user.role);
+    if (!hasRole) {
+      throw new ForbiddenException('No tiene permisos para este recurso');
+    }
+
+    return true;
   }
 }
