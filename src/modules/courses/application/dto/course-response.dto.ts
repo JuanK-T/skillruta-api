@@ -3,25 +3,25 @@ import { ChapterResponse } from './chapter-response.dto';
 
 export class CourseResponse {
   @ApiProperty({ description: 'ID único del curso', example: 'uuid-v4' })
-  id: string;
+  id!: string;
 
   @ApiProperty({
     description: 'Título del curso',
     example: 'Introducción a NestJS',
   })
-  title: string;
+  title!: string;
 
   @ApiProperty({
     description: 'Slug único del curso',
     example: 'introduccion-a-nestjs',
   })
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     description: 'Descripción del curso',
     example: 'Aprende los fundamentos de NestJS desde cero',
   })
-  description: string;
+  description!: string;
 
   @ApiProperty({
     description: 'URL de la imagen de portada',
@@ -31,31 +31,31 @@ export class CourseResponse {
   imageUrl?: string;
 
   @ApiProperty({ description: 'Categoría del curso', example: 'programming' })
-  category: string;
+  category!: string;
 
   @ApiProperty({
     description: 'Indica si el curso está publicado',
     example: true,
   })
-  isPublished: boolean;
+  isPublished?: boolean;
 
   @ApiProperty({ description: 'ID del autor del curso', example: 'user-uuid' })
-  authorId: string;
+  authorId?: string;
 
   @ApiProperty({ description: 'Nombre del autor', example: 'Juan Pérez' })
-  authorName: string;
+  authorName?: string;
 
   @ApiProperty({
     description: 'Fecha de creación del curso',
     example: '2024-01-15T10:30:00.000Z',
   })
-  createdAt: Date;
+  createdAt?: Date;
 
   @ApiProperty({
     description: 'Fecha de última actualización',
     example: '2024-01-20T15:45:00.000Z',
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @ApiProperty({
     description: 'Lista de chapters del curso',
