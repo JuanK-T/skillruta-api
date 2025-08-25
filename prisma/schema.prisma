@@ -42,7 +42,7 @@ model Course {
   id               String         @id @default(cuid())
   title            String
   slug             String         @unique
-  description      String?
+  description      String?        @db.Text
   category         CourseCategory
   isPublished      Boolean        @default(false)
   publishedAt      DateTime?
@@ -163,7 +163,7 @@ model Media {
   id         String    @id @default(uuid())
   kind       MediaKind
   storageKey String    @unique // clave en MinIO
-  url        String?
+  url        String?   @db.Text
   mimeType   String?
   sizeBytes  Int?
   sha256     String?
