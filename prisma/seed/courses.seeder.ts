@@ -1,12 +1,41 @@
 import { PrismaClient, CourseCategory, MediaKind } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { pick, generateUniqueSlug } from './utils';
+import { slugify, uploadBufferToMinio } from './minio-utils';
 
 function randomCategory(): CourseCategory {
   return pick(Object.values(CourseCategory));
 }
+
 function randomMediaKind(): MediaKind {
   return pick(Object.values(MediaKind));
+}
+
+// Función para generar contenido de archivo simulado
+// eslint-disable-next-line @typescript-eslint/require-await
+async function generateFileContent(
+  kind: MediaKind,
+  title: string
+): Promise<{
+  buffer: Buffer;
+  mimeType: string;
+  originalName: string;
+}> {
+  const extMap = {
+    [MediaKind.IMAGE]: { ext: '.jpg', mime: 'image/jpeg' },
+    [MediaKind.VIDEO]: { ext: '.mp4', mime: 'video/mp4' },
+    [MediaKind.AUDIO]: { ext: '.mp3', mime: 'audio/mpeg' },
+    [MediaKind.DOCUMENT]: { ext: '.pdf', mime: 'application/pdf' },
+    [MediaKind.OTHER]: { ext: '.bin', mime: 'application/octet-stream' },
+  };
+
+  const { ext, mime } = extMap[kind];
+  const originalName = `${slugify(title)}${ext}`;
+
+  const content = `Simulated ${kind} file for ${title}`;
+  const buffer = Buffer.from(content);
+
+  return { buffer, mimeType: mime, originalName };
 }
 
 export async function createCourseWithChapters(
@@ -15,84 +44,91 @@ export async function createCourseWithChapters(
   minChapters: number,
   maxChapters: number
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const title = faker.company.catchPhrase() as string;
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const isPublished = faker.datatype.boolean({ probability: 0.7 }) as boolean;
-
-  // 👇 aquí garantizamos que no exista en DB
+  const title = faker.company.catchPhrase();
+  const isPublished = faker.datatype.boolean({ probability: 0.7 });
   const slug = await generateUniqueSlug(prisma, title);
+
+  // Subir thumbnail a MinIO
+  let thumbnailUrl: string | null = null;
+  try {
+    const thumbnailContent = `Simulated thumbnail for ${title}`;
+    const thumbnailBuffer = Buffer.from(thumbnailContent);
+    const { url } = await uploadBufferToMinio(
+      thumbnailBuffer,
+      `thumbnail-${slug}.jpg`,
+      'image/jpeg'
+    );
+    thumbnailUrl = url; // Usamos directamente la URL que devuelve uploadBufferToMinio
+  } catch (error) {
+    console.warn(`No se pudo subir thumbnail para ${title}:`, error);
+    thumbnailUrl = `https://placehold.co/800x450/png?text=${encodeURIComponent(title)}`;
+  }
 
   const course = await prisma.course.create({
     data: {
       title,
       slug,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      description: faker.lorem.paragraph() as string,
+      description: faker.lorem.paragraph(),
       category: randomCategory(),
       isPublished,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      publishedAt: isPublished // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        ? faker.date.recent({ days: 60 })
-        : null,
-      thumbnailUrl: `https://placehold.co/800x450/png?text=${encodeURIComponent(title)}`,
+      publishedAt: isPublished ? faker.date.recent({ days: 60 }) : null,
+      thumbnailUrl,
       totalDurationSec: 0,
       authorId,
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const chaptersCount = faker.number.int({
     min: minChapters,
     max: maxChapters,
-  }) as number;
+  });
   let total = 0;
 
   for (let order = 1; order <= chaptersCount; order++) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const durationSec = faker.number.int({ min: 180, max: 1200 }) as number;
+    const durationSec = faker.number.int({ min: 180, max: 1200 });
     total += durationSec;
+    const chapterTitle = faker.company.buzzPhrase();
 
     const chapter = await prisma.chapter.create({
       data: {
         courseId: course.id,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        title: faker.company.buzzPhrase() as string,
+        title: chapterTitle,
         order,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        contentUrl: faker.internet.url() as string,
+        contentUrl: faker.internet.url(),
         durationSec,
       },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const medias = faker.number.int({ min: 0, max: 2 }) as number;
+    // Crear medios para el capítulo
+    const medias = faker.number.int({ min: 0, max: 2 });
     for (let m = 0; m < medias; m++) {
-      await prisma.media.create({
-        data: {
-          kind: randomMediaKind(), // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          storageKey: `${course.slug}/chapter-${order}/${faker.string.uuid()}`,
-          url: `https://placehold.co/1200x675/jpg?text=${encodeURIComponent(course.slug)}`,
-          mimeType: pick([
-            'image/png',
-            'image/jpeg',
-            'video/mp4',
-            'application/pdf',
-          ]),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          sizeBytes: faker.number.int({
-            min: 5_000,
-            max: 50_000_000,
-          }) as number,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          sha256: faker.string.hexadecimal({
-            length: 64,
-            casing: 'lower',
-          }) as string,
-          chapterId: chapter.id,
-        },
-      });
+      const kind = randomMediaKind();
+
+      try {
+        const { buffer, mimeType, originalName } = await generateFileContent(
+          kind,
+          `${chapterTitle}-${m + 1}`
+        );
+        const { storageKey, sizeBytes, sha256, url } =
+          await uploadBufferToMinio(buffer, originalName, mimeType);
+
+        await prisma.media.create({
+          data: {
+            kind,
+            storageKey,
+            url, // Usamos directamente la URL que devuelve uploadBufferToMinio
+            mimeType,
+            sizeBytes,
+            sha256,
+            chapterId: chapter.id,
+          },
+        });
+      } catch (error) {
+        console.warn(
+          `No se pudo crear medio para capítulo ${chapterTitle}:`,
+          error
+        );
+      }
     }
   }
 
@@ -103,7 +139,7 @@ export async function createCourseWithChapters(
 
   return prisma.course.findUnique({
     where: { id: course.id },
-    include: { chapters: true },
+    include: { chapters: { include: { media: true } } },
   });
 }
 

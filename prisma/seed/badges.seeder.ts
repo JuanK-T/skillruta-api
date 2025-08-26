@@ -12,8 +12,7 @@ export async function createBadgesForSomeCourses(
         code: `COURSE_COMPLETE_${courseId.slice(0, 8)}`,
         name: 'Curso completado',
         description: 'Otorgada al completar el curso',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        iconUrl: faker.image.urlLoremFlickr({ category: 'medal' }) as string,
+        iconUrl: faker.image.urlLoremFlickr({ category: 'medal' }),
         courseId,
       },
     });
@@ -23,11 +22,10 @@ export async function createBadgesForSomeCourses(
   for (let i = 0; i < 3; i++) {
     await prisma.badge.create({
       data: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        code: `GLOBAL_${i}_${faker.string.alphanumeric(6)}`, // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        name: faker.word.sample({ length: 2 }).toUpperCase() + ' Badge', // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        description: faker.lorem.sentence() as string, // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        iconUrl: faker.image.urlLoremFlickr({ category: 'badge' }) as string,
+        code: `GLOBAL_${i}_${faker.string.alphanumeric(6)}`,
+        name: faker.word.sample({ length: 2 }).toUpperCase() + ' Badge',
+        description: faker.lorem.sentence(),
+        iconUrl: faker.image.urlLoremFlickr({ category: 'badge' }),
       },
     });
   }

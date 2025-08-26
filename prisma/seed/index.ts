@@ -6,11 +6,18 @@ import { createCoursesBatch } from './courses.seeder';
 import { enrollUsersAndGenerateProgress } from './enrollments.seeder';
 import { createBadgesForSomeCourses } from './badges.seeder';
 import { randomlyAwardBadgesToUsers } from './award-badges.seeder';
+import { ensureBucket } from './minio-client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  try {
+    await ensureBucket();
+    console.log('✅ Bucket de MinIO verificado');
+  } catch (error) {
+    console.error('❌ Error configurando MinIO:', error);
+  }
+
   faker.seed(cfg.seedValue);
 
   console.log('🔑 Asegurando admin...');

@@ -35,15 +35,13 @@ export async function createUsers(prisma: PrismaClient, n: number) {
   const used = new Set<string>();
 
   for (let i = 0; i < n; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const name = faker.person.fullName() as string;
+    const name = faker.person.fullName();
     const base = slugify(name) || `user${i}`;
     let email: string;
 
     // bucle simple hasta encontrar uno libre
     do {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const suffix = faker.string.alphanumeric(6).toLowerCase() as string;
+      const suffix = faker.string.alphanumeric(6).toLowerCase();
       email = `${base}.${suffix}@example.com`;
     } while (used.has(email) || existingEmails.has(email));
 

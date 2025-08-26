@@ -46,7 +46,7 @@ model Course {
   category         CourseCategory
   isPublished      Boolean        @default(false)
   publishedAt      DateTime?
-  thumbnailUrl     String?
+  thumbnailUrl     String?        @db.Text
   totalDurationSec Int?
 
   authorId String
